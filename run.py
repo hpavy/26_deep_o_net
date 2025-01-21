@@ -41,14 +41,9 @@ class RunSimulation:
             X_border,
             X_border_test,
             mean_std,
-            X_pde, 
-            X_test_pde, 
-            X_test_data, 
+            X_test_data,
             U_test_data
         ) = charge_data(self.hyper_param, self.param_adim)
-        X_train.requires_grad_()
-        U_train.requires_grad_()
-        X_border.requires_grad_()
 
         # Initialiser le modèle
 
@@ -60,18 +55,15 @@ class RunSimulation:
             # On entraine le modèle
             if self.hyper_param["dynamic_weights"]:
                 weight_data = weights["weight_data"]
-                weight_pde = weights["weight_pde"]
                 weight_border = weights["weight_border"]
             else:
                 weight_data = self.hyper_param["weight_data"]
-                weight_pde = self.hyper_param["weight_pde"]
                 weight_border = self.hyper_param["weight_border"]
             train(
                 nb_epoch=self.hyper_param["nb_epoch"],
                 train_loss=train_loss,
                 test_loss=test_loss,
                 weight_data_init=weight_data,
-                weight_pde_init=weight_pde,
                 weight_border_init=weight_border,
                 dynamic_weights=self.hyper_param["dynamic_weights"],
                 lr_weights=self.hyper_param["lr_weights"],
@@ -80,8 +72,6 @@ class RunSimulation:
                 optimizer=optimizer,
                 X_train=X_train,
                 U_train=U_train,
-                X_pde=X_pde,
-                X_test_pde=X_test_pde,
                 X_test_data=X_test_data,
                 U_test_data=U_test_data,
                 Re=self.hyper_param["Re"],
