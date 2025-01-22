@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from model import PINNs
+from model import DeepONet
 import pandas as pd
 from utils import charge_data
 import json
@@ -126,22 +126,16 @@ def plot_loss_decompose(file_save, file, title_graph):
     plt.clf()
     csv_train = read_csv(file + "/train_loss.csv")
     train_data = list(csv_train["data"])
-    train_pde = list(csv_train["pde"])
     train_border = list(csv_train["border"])
 
     csv_test = read_csv(file + "/test_loss.csv")
     test_data = list(csv_test["data"])
-    test_pde = list(csv_test["pde"])
     test_border = list(csv_test["border"])
 
     plt.figure(figsize=(10, 6))
     epochs = np.arange(len(train_data))
-    plt.plot(epochs, train_pde, label="Loss pde train", color="blue")
     plt.plot(epochs, train_data, label="Loss data train", color="green")
     plt.plot(epochs, train_border, label="Loss border train", color="red")
-
-    plt.plot(epochs, test_pde, label="Loss pde test",
-             linestyle="--", color="cyan")
     plt.plot(epochs, test_data, label="Loss data test",
              linestyle="--", color="lime")
     plt.plot(
@@ -279,7 +273,7 @@ def plot_results(file_name, param_adim, epoch="", title_loss="loss_graph"):
     # On charge le modele et les data
     with open("results/" + file_name + "/hyper_param.json", "r") as file:
         hyper_param = json.load(file)
-    model = PINNs(hyper_param)
+    model = DeepONet(hyper_param)
     checkpoint = torch.load(
         "results/" + file_name + "/" + epoch + "/" + "model_weights.pth",
         map_location=torch.device("cpu"),
