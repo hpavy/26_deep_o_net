@@ -170,10 +170,11 @@ if __name__ == "__main__":
         nb_entry_branch=1,
         nb_entry_trunk=3,
         trunk_width=64,
-        trunk_depth=2,
+        trunk_depth=6,
         branch_width=64,
-        branch_depth=2,
+        branch_depth=6,
         nb_branches=20,
         nb_exit=3,
     )
-    print(piche(torch.randn(25, 3), torch.randn(25, 1)))
+    nombre_parametres = sum(p.numel() for p in piche.parameters() if p.requires_grad)
+    print(nombre_parametres)
