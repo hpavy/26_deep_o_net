@@ -6,7 +6,6 @@ import torch.optim as optim
 from model import DeepONet
 import torch
 import time
-from geometry import RectangleWithoutCylinder
 import numpy as np
 
 
@@ -22,9 +21,11 @@ def read_csv(path):
     return pd.read_csv(path)
 
 
-def find_x_branch(ya0, w0, nb_branch, t_min, t_max):
+def find_x_branch(ya0, H, m, nb_branch, t_min, t_max):
+    f = 0.5 * (H / m) ** 0.5
+    w_0 = 2 * torch.pi * f 
     time_interval = torch.linspace(t_min, t_max, nb_branch)
-    return ya0 * (w0**2) * torch.cos(w0 * time_interval)
+    return ya0 * (w_0**2) * torch.cos(w_0 * time_interval)
 
 
 def charge_data(hyper_param, param_adim):
@@ -39,8 +40,9 @@ def charge_data(hyper_param, param_adim):
     x_norm_full, y_norm_full, t_norm_full, x_branch_norm_full = [], [], [], []
     u_norm_full, v_norm_full, p_norm_full = [], [], []
 
-    f = 0.5 * (hyper_param["H"] / hyper_param["m"]) ** 0.5
-    w0 = 2 * torch.pi * f
+    H_numpy = np.array(hyper_param["H"])
+    f_numpy = 0.5 * (H_numpy / hyper_param["m"]) ** 0.5
+    f = np.min(f_numpy)
     time_tot = hyper_param['nb_period_plot'] / f  # la fréquence de l'écoulement
     t_max = hyper_param['t_min'] + hyper_param['nb_period'] * time_tot
     t_max_plot = hyper_param['t_min'] + time_tot
@@ -76,7 +78,8 @@ def charge_data(hyper_param, param_adim):
         x_branch_full.append(
                 find_x_branch(
                     hyper_param['ya0'][k],
-                    w0=w0,
+                    H=hyper_param['H'][k],
+                    m=hyper_param['m'],
                     nb_branch=hyper_param['nb_entry_branch'],
                     t_min=hyper_param['t_min'],
                     t_max=t_max_plot).reshape(-1, 1).repeat(1, x_full[-1].shape[0]).T

@@ -29,7 +29,6 @@ def train(
     X_border,
     X_border_test,
     mean_std,
-    w_0,
     param_adim,
     nb_simu,
 ):
@@ -54,7 +53,6 @@ def train(
 
     batch_size = torch.tensor(batch_size, device=device, dtype=torch.int64)
     nb_batch = 1000  # mis au pif
-    w_0 = torch.tensor(w_0, dtype=torch.float32, device=device)
     Re = torch.tensor(Re, dtype=torch.float32, device=device)
     X_branch_border, X_trunk_border = X_border
     X_branch_border_test, X_trunk_border_test = X_border_test
