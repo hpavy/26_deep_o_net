@@ -5,7 +5,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Le code se lance sur {device}")
 
 
-folder_result_name = "9_without_dynamic"  # name of the result folder
+folder_result_name = "3_like_2_more_border"  # name of the result folder
 
 
 # On utilise hyper_param_init uniquement si c'est un nouveau modèle
@@ -68,7 +68,7 @@ hyper_param_init = {
     'nb_period_plot': 2,
     "nb_points_close_cylinder": 50,  # le nombre de points proches du cylindre
     "rayon_close_cylinder": 0.015,
-    "nb_points_border": 25,  # le nombrede points sur la condition init
+    "nb_points_border": 100,  # le nombrede points sur la condition init
 }
 
 param_adim = {"V": 1.0, "L": 0.025, "rho": 1.2}
